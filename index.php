@@ -1,5 +1,7 @@
 <?php
 //include_once '../db/Database.php';
+use config\Config;
+
 include_once 'HomePage.php';
 include_once 'config/Page.php';
 
@@ -15,15 +17,4 @@ if ($searchInPage) {
 
     echo $result;
 }
-//switch ($request) {
-//    case '/table':
-//        include 'data/index.php';
-//        break;
-//    case '/form':
-//        include 'forms/form.php';
-//        break;
-//    default:
-//        echo "404 Not Found";
-//        break;
-//}
 ?>

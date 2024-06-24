@@ -1,5 +1,8 @@
 <?php
-require_once 'Config.php';
+
+use config\Config;
+
+require_once '../config/Config.php';
 
 class Database {
     public ?mysqli $conn;
