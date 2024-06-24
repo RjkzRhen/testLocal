@@ -1,0 +1,48 @@
+version: '3'
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/firstProject
+      - ./docker/nginx/site.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - web
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    working_dir: /var/www/firstProject
+    volumes:
+      - .:/var/www/firstProject
+      - ./docker/php/back.sh:/back.sh
+    entrypoint: /back.sh
+    environment:
+      - XDEBUG_SESSION=1
+      - PHP_IDE_CONFIG=serverName=first-project.local
+    depends_on:
+      - db
+    networks:
+      - web
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: test
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - web
+
+volumes:
+  dbdata:
+
+networks:
+  web:
