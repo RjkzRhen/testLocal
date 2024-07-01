@@ -8,9 +8,15 @@ class Config
     private string $password;
     private string $dbname;
 
+    /**
+     * @throws \Exception
+     */
     public function __construct($filename)
     {
         $iniFile = parse_ini_file($filename, true);
+        if ($iniFile === false) {
+            throw new \Exception("Unable to read configuration file: " . $filename);
+        }
         $this->servername = $iniFile['servername'];
         $this->username = $iniFile['username'];
         $this->password = $iniFile['password'];
