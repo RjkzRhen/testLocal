@@ -2,7 +2,7 @@
 
 include_once __DIR__ . '/../db/Database.php';
 require_once __DIR__ . '/../config/Config.php';
-include_once __DIR__ . '/../forms/form.php';
+include_once __DIR__ . '/../forms/Form.php';
 use config\Config;
 
 $config = new Config('config.ini');
@@ -36,20 +36,7 @@ class InsertForm {
         }
         return $result;
     }
-    public function isAllValid(array $dataTemplate): bool {
-        foreach ($dataTemplate as &$field) {
-            if ($field['required'] && empty($field['value'])) {
-                $field['isValid'] = false;
-            } else {
-                $field['isValid'] = true;
-            }
 
-            if (!$field['isValid']) {
-                return false;
-            }
-        }
-        return true;
-    }
     public function insertIntoTable(array $dataTemplate, $con): void {
         $columns = implode(", ", array_map(function($item) {
             return "`" . $item['name'] . "`";
@@ -62,8 +49,7 @@ class InsertForm {
         $sql = "INSERT INTO `name` ($columns) VALUES ($values)";
 
         if ($con->query($sql)) {
-            header("Location: ../data/Table.php");
-            if (ob_get_length()) ob_end_flush();
+            header("Location: /table");
             exit;
         } else {
             echo "Ошибка: " . $sql . "<br>" . $con->error;
@@ -75,17 +61,15 @@ class InsertForm {
      */
     public function handleRequest(): array
     {
-        ob_start();
-        if (isset($_POST['submit'])) {
-            $fields = $this->getDataFromFormAndUpdateTemplate();
-            if ($this->isAllValid($fields)) {
-                $config = new Config(__DIR__ . '/../config.ini');
-                $db = new Database($config);
-                $this->insertIntoTable($fields, $db->conn);
-            }
+        if (isset($_POST['submit'])) { // Проверяет, была ли отправлена форма
+            $fields = $this->getDataFromFormAndUpdateTemplate(); // Извлекает и обновляет данные формы
+
         } else {
-            $fields = $this->getTemplate();
+            $fields = $this->getTemplate(); // Получает шаблон формы с пустыми значениями, если форма не отправлена
         }
-        return $fields;
+        return $fields; // Возвращает поля формы
     }
 }
+/*
+ * handleRequest
+ */

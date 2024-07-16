@@ -1,6 +1,6 @@
 <?php
 
-class HomePage
+class HomePage implements PageInterface
 {
     private function getTitle(): string
     {

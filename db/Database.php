@@ -29,7 +29,6 @@ class Database {
         return $conn;
     }
 
-
     public function executeSQL($sql, $params = null): false|mysqli_stmt
     {
         $stmt = $this->conn->prepare($sql);
@@ -39,12 +38,6 @@ class Database {
         $stmt->execute();
         return $stmt;
     }
-
-    public function closeConnection(): void
-    {
-        $this->conn->close();
-    }
-
 
     public function getTable(int $minAge): string {
         $rows = $this->getTableRows($minAge);
@@ -76,7 +69,8 @@ class Database {
         }
         return $rows;
     }
-    public function deleteRecord($id) {
+    public function deleteRecord($id): void
+    {
         $sql = "DELETE FROM `name` WHERE id = ?";
         $params = array('types' => 'i', 'values' => array($id));
 
